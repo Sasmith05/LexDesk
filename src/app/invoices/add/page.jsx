@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import Sidebar from "@/components/sidebar";
 import { 
   Receipt, 
@@ -18,7 +19,16 @@ import {
 } from "lucide-react";
 
 export default function AddInvoicePage() {
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
+  
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      router.push("/login");
+    } else if (session?.user?.role === "staff") {
+      router.push("/dashboard");
+    }
+  }, [sessionStatus, session, router]);
   
   const [clientId, setClientId] = useState("");
   const [caseId, setCaseId] = useState("");

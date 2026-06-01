@@ -27,7 +27,8 @@ export default function DashboardCharts({
   pendingCount, 
   openCount, 
   closedCount,
-  monthlyTrend 
+  monthlyTrend,
+  role
 }) {
   const [mounted, setMounted] = useState(false);
 
@@ -122,34 +123,42 @@ export default function DashboardCharts({
             <div>
               <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
                 <TrendingUp size={18} className="text-zinc-500" />
-                Case & Billing Trends
+                {role === "staff" ? "Case Trends" : "Case & Billing Trends"}
               </h3>
-              <p className="text-xs text-zinc-400">Monthly breakdown of litigations and mock ledger collections.</p>
+              <p className="text-xs text-zinc-400">
+                {role === "staff" 
+                  ? "Monthly breakdown of client litigations." 
+                  : "Monthly breakdown of litigations and mock ledger collections."}
+              </p>
             </div>
             <div className="flex items-center gap-4 text-xs font-semibold">
               <span className="flex items-center gap-1.5 text-zinc-700">
                 <span className="h-2 w-2 bg-zinc-900 rounded-full" />
                 Cases Filed
               </span>
-              <span className="flex items-center gap-1.5 text-emerald-600">
-                <span className="h-2 w-2 bg-emerald-500 rounded-full" />
-                Billing (₹)
-              </span>
+              {role !== "staff" && (
+                <span className="flex items-center gap-1.5 text-emerald-600">
+                  <span className="h-2 w-2 bg-emerald-500 rounded-full" />
+                  Billing (₹)
+                </span>
+              )}
             </div>
           </div>
 
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 10, right: role === "staff" ? -20 : 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCases" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#18181b" stopOpacity={0.08}/>
                     <stop offset="95%" stopColor="#18181b" stopOpacity={0.01}/>
                   </linearGradient>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.08}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.01}/>
-                  </linearGradient>
+                  {role !== "staff" && (
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.08}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0.01}/>
+                    </linearGradient>
+                  )}
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f1f1" />
                 <XAxis 
@@ -164,14 +173,16 @@ export default function DashboardCharts({
                   tickLine={false} 
                   tick={{ fill: '#a1a1aa', fontSize: 12 }} 
                 />
-                <YAxis 
-                  yAxisId="right"
-                  orientation="right"
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#a1a1aa', fontSize: 12 }} 
-                  tickFormatter={(val) => `₹${val}`}
-                />
+                {role !== "staff" && (
+                  <YAxis 
+                    yAxisId="right"
+                    orientation="right"
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#a1a1aa', fontSize: 12 }} 
+                    tickFormatter={(val) => `₹${val}`}
+                  />
+                )}
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: '#fff', 
@@ -180,7 +191,10 @@ export default function DashboardCharts({
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                   }}
                   labelStyle={{ fontWeight: 'bold', color: '#18181b' }}
-                  formatter={(value, name) => name === 'Revenue' ? [`₹${value}`, 'Billing'] : [value, name]}
+                  formatter={(value, name) => {
+                    if (role === "staff" && name === "Revenue") return [null, null];
+                    return name === 'Revenue' ? [`₹${value}`, 'Billing'] : [value, name];
+                  }}
                 />
                 <Area 
                   yAxisId="left"
@@ -191,15 +205,17 @@ export default function DashboardCharts({
                   fillOpacity={1} 
                   fill="url(#colorCases)" 
                 />
-                <Area 
-                  yAxisId="right"
-                  type="monotone" 
-                  dataKey="Revenue" 
-                  stroke="#10b981" 
-                  strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorRevenue)" 
-                />
+                {role !== "staff" && (
+                  <Area 
+                    yAxisId="right"
+                    type="monotone" 
+                    dataKey="Revenue" 
+                    stroke="#10b981" 
+                    strokeWidth={2}
+                    fillOpacity={1} 
+                    fill="url(#colorRevenue)" 
+                  />
+                )}
               </AreaChart>
             </ResponsiveContainer>
           </div>

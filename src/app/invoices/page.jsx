@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/sidebar";
 import { 
   Receipt, 
@@ -27,6 +29,9 @@ import {
 } from "@/components/ui/table";
 
 export default function InvoicesPage() {
+  const { data: session, status: sessionStatus } = useSession();
+  const router = useRouter();
+  
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -38,8 +43,14 @@ export default function InvoicesPage() {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-    fetchInvoices();
-  }, []);
+    if (sessionStatus === "unauthenticated") {
+      router.push("/login");
+    } else if (session?.user?.role === "staff") {
+      router.push("/dashboard");
+    } else if (sessionStatus === "authenticated") {
+      fetchInvoices();
+    }
+  }, [sessionStatus, session, router]);
 
   async function fetchInvoices() {
     setLoading(true);

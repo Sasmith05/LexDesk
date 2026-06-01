@@ -2,6 +2,8 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/sidebar";
 import { 
   ArrowLeft, 
@@ -20,16 +22,27 @@ import {
 } from "lucide-react";
 
 export default function InvoiceDetailsPage({ params }) {
+  const { data: session, status: sessionStatus } = useSession();
+  const router = useRouter();
+  
   const { id } = use(params);
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (id) {
+    if (sessionStatus === "unauthenticated") {
+      router.push("/login");
+    } else if (session?.user?.role === "staff") {
+      router.push("/dashboard");
+    }
+  }, [sessionStatus, session, router]);
+
+  useEffect(() => {
+    if (sessionStatus === "authenticated" && id && session?.user?.role !== "staff") {
       fetchInvoiceDetails();
     }
-  }, [id]);
+  }, [id, sessionStatus, session]);
 
   async function fetchInvoiceDetails() {
     try {

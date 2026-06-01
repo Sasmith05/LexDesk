@@ -77,6 +77,7 @@ export default async function Dashboard() {
           openCount={openCount}
           closedCount={closedCount}
           monthlyTrend={monthlyTrend}
+          role={session?.user?.role}
         />
       </main>
     </div>

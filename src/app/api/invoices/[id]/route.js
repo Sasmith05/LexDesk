@@ -8,6 +8,9 @@ export async function GET(request, { params }) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (session.user.role === "staff") {
+    return NextResponse.json({ error: "Forbidden: Access Denied" }, { status: 403 });
+  }
 
   try {
     const { id } = await params;
@@ -35,6 +38,9 @@ export async function PUT(request, { params }) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.user.role === "staff") {
+    return NextResponse.json({ error: "Forbidden: Access Denied" }, { status: 403 });
   }
 
   try {
@@ -111,6 +117,9 @@ export async function DELETE(request, { params }) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.user.role === "staff") {
+    return NextResponse.json({ error: "Forbidden: Access Denied" }, { status: 403 });
   }
 
   try {

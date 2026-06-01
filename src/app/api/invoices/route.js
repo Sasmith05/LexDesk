@@ -8,6 +8,9 @@ export async function GET(request) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (session.user.role === "staff") {
+    return NextResponse.json({ error: "Forbidden: Access Denied" }, { status: 403 });
+  }
 
   try {
     const invoices = await prisma.invoice.findMany({
@@ -29,6 +32,9 @@ export async function POST(request) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.user.role === "staff") {
+    return NextResponse.json({ error: "Forbidden: Access Denied" }, { status: 403 });
   }
 
   try {

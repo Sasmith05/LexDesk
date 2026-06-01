@@ -113,19 +113,21 @@ export default function Sidebar() {
           </Link>
         </li>
 
-        <li>
-          <Link
-            href="/invoices"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-              pathname.startsWith("/invoices")
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <Receipt size={20} />
-            Invoices
-          </Link>
-        </li>
+        {user?.role !== "staff" && (
+          <li>
+            <Link
+              href="/invoices"
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                pathname.startsWith("/invoices")
+                  ? "bg-white/10 text-white font-semibold"
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <Receipt size={20} />
+              Invoices
+            </Link>
+          </li>
+        )}
       </ul>
       </div>
     </div>
