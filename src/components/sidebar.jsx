@@ -17,8 +17,9 @@ export default function Sidebar() {
   const pathname = usePathname() || "";
 
   return (
-    <div className="w-64 h-screen bg-black text-white p-5">
-      <h1 className="text-2xl font-bold mb-6">LexDesk</h1>
+    <div className="w-64 h-screen bg-black text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40">
+      <div>
+        <h1 className="text-2xl font-bold mb-6">LexDesk</h1>
 
       <div className="mb-8">
         <div className="text-sm text-gray-300">Signed in as</div>
@@ -104,6 +105,7 @@ export default function Sidebar() {
           </div>
         </li>
       </ul>
+      </div>
     </div>
   );
 }
