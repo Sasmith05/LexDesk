@@ -1,6 +1,8 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -12,6 +14,7 @@ import {
 export default function Sidebar() {
   const { data: session, status } = useSession();
   const user = session?.user;
+  const pathname = usePathname() || "";
 
   return (
     <div className="w-64 h-screen bg-black text-white p-5">
@@ -37,30 +40,54 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <ul className="space-y-6">
-        <li className="flex items-center gap-3">
-          <LayoutDashboard size={20} />
-          Dashboard
+      <ul className="space-y-4">
+        <li>
+          <Link
+            href="/dashboard"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              pathname === "/dashboard"
+                ? "bg-white/10 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <LayoutDashboard size={20} />
+            Dashboard
+          </Link>
         </li>
 
-        <li className="flex items-center gap-3">
-          <Users size={20} />
-          Clients
+        <li>
+          <Link
+            href="/clients"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              pathname.startsWith("/clients")
+                ? "bg-white/10 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <Users size={20} />
+            Clients
+          </Link>
         </li>
 
-        <li className="flex items-center gap-3">
-          <Briefcase size={20} />
-          Cases
+        <li>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 cursor-not-allowed">
+            <Briefcase size={20} />
+            Cases
+          </div>
         </li>
 
-        <li className="flex items-center gap-3">
-          <FileText size={20} />
-          Notary
+        <li>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 cursor-not-allowed">
+            <FileText size={20} />
+            Notary
+          </div>
         </li>
 
-        <li className="flex items-center gap-3">
-          <Receipt size={20} />
-          Invoices
+        <li>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 cursor-not-allowed">
+            <Receipt size={20} />
+            Invoices
+          </div>
         </li>
       </ul>
     </div>

@@ -14,3 +14,11 @@ model User {
   role      String
   createdAt DateTime @default(now())
 }
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  address   String
+  createdAt DateTime @default(now())
+}
