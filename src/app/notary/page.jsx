@@ -13,7 +13,8 @@ import {
   AlertCircle,
   Coins,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Printer
 } from "lucide-react";
 import {
   Table,
@@ -28,6 +29,10 @@ export default function NotaryPage() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  
+  // Date period reporting state
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   
   // Delete modal state
   const [deleteId, setDeleteId] = useState(null);
@@ -82,60 +87,103 @@ export default function NotaryPage() {
     }, 3000);
   }
 
-  // Filter entries based on search query (by document name, executant, witness, client name, or serial number)
+  // Filter entries based on search query AND date-range period
   const filteredEntries = entries.filter((e) => {
     const query = search.toLowerCase();
-    return (
+    const matchesSearch = 
       e.serialNo.toString().includes(query) ||
       e.documentName.toLowerCase().includes(query) ||
       e.executants.toLowerCase().includes(query) ||
       e.witnesses.toLowerCase().includes(query) ||
-      (e.client?.name || "").toLowerCase().includes(query)
-    );
+      (e.client?.name || "").toLowerCase().includes(query);
+
+    if (!matchesSearch) return false;
+
+    // Date range filter
+    const notaryDate = new Date(e.notaryDate);
+    if (startDate) {
+      const start = new Date(startDate);
+      if (notaryDate < start) return false;
+    }
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include full end day
+      if (notaryDate > end) return false;
+    }
+    return true;
   });
 
-  // Metrics
-  const totalEntries = entries.length;
-  const totalNotaryFees = entries.reduce((sum, e) => sum + (e.notaryFee || 0), 0);
-  const totalStampDuty = entries.reduce((sum, e) => sum + (e.stampDuty || 0), 0);
+  // Metrics (Screen only, reflects active filtered results dynamically!)
+  const totalEntries = filteredEntries.length;
+  const totalNotaryFees = filteredEntries.reduce((sum, e) => sum + (e.notaryFee || 0), 0);
+  const totalStampDuty = filteredEntries.reduce((sum, e) => sum + (e.stampDuty || 0), 0);
 
   return (
-    <div className="flex bg-zinc-50 min-h-screen font-sans">
+    <div className="flex bg-zinc-50 min-h-screen font-sans print:bg-white print:block">
       <Sidebar />
 
-      <main className="flex-1 p-8 md:p-10 max-w-7xl mx-auto overflow-hidden">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <main className="flex-1 p-8 md:p-10 max-w-7xl mx-auto overflow-hidden print:p-0 print:max-w-full print:mx-0">
+        
+        {/* Print-Only Header Letterhead */}
+        <div className="hidden print:block border-b border-zinc-200 pb-6 mb-6">
+          <div className="flex justify-between items-end">
+            <div>
+              <h2 className="text-3xl font-black text-zinc-950 tracking-tight">LexDesk</h2>
+              <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest mt-1">
+                Advocate & Legal Consultants
+              </p>
+            </div>
+            <div className="text-right">
+              <h1 className="text-lg font-black text-zinc-900 uppercase">Notary Register Report</h1>
+              <p className="text-xs text-zinc-500 font-semibold mt-1">
+                Period: {startDate ? new Date(startDate).toLocaleDateString(undefined, { dateStyle: "medium" }) : "Beginning"} to {endDate ? new Date(endDate).toLocaleDateString(undefined, { dateStyle: "medium" }) : "Present"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Header (Hidden in Print) */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 print:hidden">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">Notary Register</h1>
             <p className="text-zinc-500 mt-1">Record legal document notarizations, verify stamp duties, and track fees collected.</p>
           </div>
-          <Link
-            href="/notary/add"
-            className="inline-flex items-center gap-2 bg-zinc-950 text-zinc-50 hover:bg-zinc-800 active:bg-zinc-900 px-5 py-3 rounded-xl font-medium shadow-sm transition-all duration-200"
-          >
-            <Plus size={18} />
-            New Register Entry
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => window.print()}
+              disabled={filteredEntries.length === 0}
+              className="inline-flex items-center gap-2 border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 px-5 py-3 rounded-xl font-medium shadow-sm transition-all duration-200 disabled:opacity-50"
+            >
+              <Printer size={18} />
+              Print Report
+            </button>
+            <Link
+              href="/notary/add"
+              className="inline-flex items-center gap-2 bg-zinc-950 text-zinc-50 hover:bg-zinc-800 active:bg-zinc-900 px-5 py-3 rounded-xl font-medium shadow-sm transition-all duration-200"
+            >
+              <Plus size={18} />
+              New Register Entry
+            </Link>
+          </div>
         </div>
 
-        {/* Dynamic Alert Toast */}
+        {/* Dynamic Alert Toast (Hidden in Print) */}
         {toastMessage && (
-          <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 px-5 py-3 rounded-xl shadow-lg border border-zinc-800 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5 duration-300">
+          <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 px-5 py-3 rounded-xl shadow-lg border border-zinc-800 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5 duration-300 print:hidden">
             <span className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
             <span className="text-sm font-medium">{toastMessage}</span>
           </div>
         )}
 
-        {/* Metric Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Metric Cards (Hidden in Print) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 print:hidden">
           {/* Total Notarizations */}
           <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex items-center gap-5">
             <div className="h-12 w-12 bg-zinc-100 rounded-xl flex items-center justify-center text-zinc-800">
               <FileText size={22} />
             </div>
             <div>
-              <p className="text-sm font-medium text-zinc-500">Total Entries</p>
+              <p className="text-sm font-medium text-zinc-500">Period Entries</p>
               <h3 className="text-2xl font-bold text-zinc-900 mt-0.5">{totalEntries}</h3>
             </div>
           </div>
@@ -146,7 +194,7 @@ export default function NotaryPage() {
               <Coins size={22} />
             </div>
             <div>
-              <p className="text-sm font-medium text-zinc-500">Notary Fees Collected</p>
+              <p className="text-sm font-medium text-zinc-500">Fees Collected</p>
               <h3 className="text-2xl font-bold text-zinc-900 mt-0.5">₹{totalNotaryFees.toLocaleString("en-IN")}</h3>
             </div>
           </div>
@@ -164,10 +212,10 @@ export default function NotaryPage() {
         </div>
 
         {/* Main Notary Registry Table */}
-        <div className="bg-white border border-zinc-200/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
-          {/* Controls Bar */}
-          <div className="p-5 border-b border-zinc-100 flex flex-col sm:flex-row items-center gap-4 bg-zinc-50/50">
-            <div className="relative w-full sm:max-w-xs">
+        <div className="bg-white border border-zinc-200/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden print:border-0 print:shadow-none">
+          {/* Controls Bar (Hidden in Print) */}
+          <div className="p-5 border-b border-zinc-100 flex flex-col md:flex-row items-center gap-4 bg-zinc-50/50 print:hidden">
+            <div className="relative w-full md:max-w-xs">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
               <input
                 type="text"
@@ -177,16 +225,43 @@ export default function NotaryPage() {
                 className="w-full pl-10 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent transition-all placeholder:text-zinc-400"
               />
             </div>
-            {search && (
+            
+            {/* Period Date Filters */}
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-zinc-400">From:</span>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-zinc-950 text-zinc-800 font-semibold"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-zinc-400">To:</span>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-zinc-950 text-zinc-800 font-semibold"
+                />
+              </div>
+            </div>
+
+            {(search || startDate || endDate) && (
               <button 
-                onClick={() => setSearch("")} 
-                className="text-xs text-zinc-500 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-lg transition-colors font-medium"
+                onClick={() => {
+                  setSearch("");
+                  setStartDate("");
+                  setEndDate("");
+                }} 
+                className="text-xs text-zinc-500 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-lg transition-colors font-semibold"
               >
                 Clear Filters
               </button>
             )}
             <div className="ml-auto text-xs text-zinc-400 font-medium">
-              Showing {filteredEntries.length} of {totalEntries} records
+              Showing {filteredEntries.length} of {entries.length} records
             </div>
           </div>
 
@@ -198,27 +273,27 @@ export default function NotaryPage() {
                 <p className="text-sm text-zinc-500 font-medium">Loading notary database...</p>
               </div>
             ) : filteredEntries.length > 0 ? (
-              <Table>
+              <Table className="print:border-collapse">
                 <TableHeader>
-                  <TableRow className="bg-zinc-50/50 hover:bg-zinc-50/50">
-                    <TableHead className="py-4 font-semibold text-zinc-700 pl-6 w-24">Serial No</TableHead>
-                    <TableHead className="py-4 font-semibold text-zinc-700">Document Type</TableHead>
-                    <TableHead className="py-4 font-semibold text-zinc-700">Parties Involved</TableHead>
-                    <TableHead className="py-4 font-semibold text-zinc-700">Notarization Date</TableHead>
-                    <TableHead className="py-4 font-semibold text-zinc-700">Stamp Duty (₹)</TableHead>
-                    <TableHead className="py-4 font-semibold text-zinc-700">Notary Fee (₹)</TableHead>
-                    <TableHead className="py-4 font-semibold text-zinc-700 pr-6 text-right">Actions</TableHead>
+                  <TableRow className="bg-zinc-50/50 hover:bg-zinc-50/50 print:bg-zinc-100">
+                    <TableHead className="py-4 font-bold text-zinc-700 pl-6 w-24">Serial No</TableHead>
+                    <TableHead className="py-4 font-bold text-zinc-700">Document Type</TableHead>
+                    <TableHead className="py-4 font-bold text-zinc-700">Parties Involved</TableHead>
+                    <TableHead className="py-4 font-bold text-zinc-700">Notarization Date</TableHead>
+                    <TableHead className="py-4 font-bold text-zinc-700">Stamp Duty (₹)</TableHead>
+                    <TableHead className="py-4 font-bold text-zinc-700">Notary Fee (₹)</TableHead>
+                    <TableHead className="py-4 font-bold text-zinc-700 pr-6 text-right print:hidden">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredEntries.map((entry) => (
-                    <TableRow key={entry.id} className="hover:bg-zinc-50/30 transition-all border-b border-zinc-100">
-                      <TableCell className="py-4 pl-6 font-bold text-zinc-800">
+                    <TableRow key={entry.id} className="hover:bg-zinc-50/30 transition-all border-b border-zinc-100 print:border-zinc-300">
+                      <TableCell className="py-4 pl-6 font-black text-zinc-900">
                         #{entry.serialNo}
                       </TableCell>
                       <TableCell className="py-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 bg-zinc-100 text-zinc-700 rounded-full flex items-center justify-center font-bold text-sm">
+                          <div className="h-9 w-9 bg-zinc-100 text-zinc-700 rounded-full flex items-center justify-center font-bold text-sm print:hidden">
                             <FileText size={16} />
                           </div>
                           <div>
@@ -244,16 +319,16 @@ export default function NotaryPage() {
                             </div>
                           )}
                           {entry.client && (
-                            <div className="inline-flex items-center gap-1 bg-zinc-100 text-zinc-700 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                            <div className="inline-flex items-center gap-1 bg-zinc-100 text-zinc-700 text-[10px] px-2 py-0.5 rounded-full font-bold print:border">
                               <UserCheck size={10} />
                               Client: {entry.client.name}
                             </div>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="py-4 text-zinc-500 text-xs">
+                      <TableCell className="py-4 text-zinc-500 text-xs font-semibold">
                         <div className="flex items-center gap-1.5">
-                          <Calendar size={13} className="text-zinc-400" />
+                          <Calendar size={13} className="text-zinc-400 print:hidden" />
                           {new Date(entry.notaryDate).toLocaleDateString(undefined, {
                             year: "numeric",
                             month: "short",
@@ -261,13 +336,13 @@ export default function NotaryPage() {
                           })}
                         </div>
                       </TableCell>
-                      <TableCell className="py-4 font-semibold text-zinc-700">
+                      <TableCell className="py-4 font-bold text-zinc-700">
                         ₹{(entry.stampDuty || 0).toLocaleString("en-IN")}
                       </TableCell>
-                      <TableCell className="py-4 font-bold text-emerald-600">
+                      <TableCell className="py-4 font-black text-emerald-600">
                         ₹{(entry.notaryFee || 0).toLocaleString("en-IN")}
                       </TableCell>
-                      <TableCell className="py-4 pr-6 text-right">
+                      <TableCell className="py-4 pr-6 text-right print:hidden">
                         <div className="inline-flex items-center gap-2">
                           <Link
                             href={`/notary/${entry.id}/edit`}
@@ -290,15 +365,15 @@ export default function NotaryPage() {
                 </TableBody>
               </Table>
             ) : (
-              <div className="py-24 text-center">
+              <div className="py-24 text-center print:hidden">
                 <div className="h-16 w-16 bg-zinc-50 border border-zinc-100 rounded-2xl flex items-center justify-center mx-auto text-zinc-400 mb-4 shadow-inner">
                   <FileText size={28} />
                 </div>
                 <h3 className="text-lg font-bold text-zinc-800">No notary entries found</h3>
                 <p className="text-sm text-zinc-400 max-w-xs mx-auto mt-1">
-                  {search ? "No records match your active search terms." : "Record your first legal document notarization in the register."}
+                  {search || startDate || endDate ? "No records match your active period or search filters." : "Record your first legal document notarization in the register."}
                 </p>
-                {!search && (
+                {!search && !startDate && !endDate && (
                   <Link
                     href="/notary/add"
                     className="inline-flex items-center gap-2 bg-zinc-950 text-zinc-50 hover:bg-zinc-800 active:bg-zinc-900 px-4 py-2.5 rounded-xl font-medium mt-5 text-sm transition-all"
@@ -313,9 +388,9 @@ export default function NotaryPage() {
         </div>
       </main>
 
-      {/* Delete Confirmation Modal (Glassmorphism Overlay) */}
+      {/* Delete Confirmation Modal (Hidden in Print) */}
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-sm animate-in fade-in duration-200 print:hidden">
           <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl max-w-sm w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex items-center gap-3 text-red-600 mb-3">
               <AlertCircle size={24} />
