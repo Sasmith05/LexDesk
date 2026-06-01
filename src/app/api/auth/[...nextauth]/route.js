@@ -15,8 +15,13 @@ export const authOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        // Automatically resolve simple usernames (like 'admin') to their database email keys
+        const resolvedEmail = credentials.email.includes("@")
+          ? credentials.email.trim()
+          : `${credentials.email.trim().toLowerCase()}@lexdesk.com`;
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: resolvedEmail },
         });
 
         if (!user) return null;
@@ -28,9 +33,13 @@ export const authOptions = {
 
         if (!passwordValid) return null;
 
+        // Compute a clean, friendly capitalized username display name
+        const prefix = user.email.split("@")[0];
+        const displayName = prefix.charAt(0).toUpperCase() + prefix.slice(1);
+
         return {
           id: user.id,
-          name: user.email,
+          name: displayName,
           email: user.email,
           role: user.role,
         };

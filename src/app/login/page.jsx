@@ -3,7 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, Loader2, AlertCircle, Briefcase } from "lucide-react";
+import { User, Lock, Loader2, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function LoginPage() {
   async function handleLogin(e) {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      setError("Please enter both email and password.");
+      setError("Please enter both username/email and password.");
       return;
     }
 
@@ -40,7 +40,7 @@ export default function LoginPage() {
       if (result?.ok) {
         router.push("/dashboard");
       } else {
-        setError("Invalid email or password. Please try again.");
+        setError("Invalid username/email or password. Please try again.");
         setLoading(false);
       }
     } catch (err) {
@@ -58,10 +58,14 @@ export default function LoginPage() {
 
       {/* Login Card */}
       <div className="backdrop-blur-md bg-zinc-900/40 border border-zinc-800/80 p-8 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] w-96 relative z-10 animate-in fade-in zoom-in-95 duration-500">
-        {/* Branding Header */}
+        {/* Branding Header with Law Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="h-12 w-12 bg-white text-zinc-950 rounded-2xl flex items-center justify-center shadow-lg shadow-white/5 border border-white/10 mb-4 animate-bounce duration-[3000ms]">
-            <Briefcase size={22} className="stroke-[2]" />
+          <div className="h-20 w-20 overflow-hidden bg-zinc-950 rounded-2xl flex items-center justify-center shadow-xl border border-zinc-800/80 mb-4 hover:scale-105 transition-transform duration-300">
+            <img 
+              src="/law_logo.png" 
+              alt="LexDesk Logo" 
+              className="h-full w-full object-cover" 
+            />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-white">LexDesk</h1>
           <p className="text-zinc-500 text-xs mt-1.5 uppercase tracking-widest font-semibold">
@@ -79,17 +83,17 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Email Input Field */}
+          {/* Username/Email Input Field */}
           <div className="space-y-2">
             <label htmlFor="email" className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">
-              Email Address
+              Username or Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
               <input
                 id="email"
-                type="email"
-                placeholder="admin@gmail.com"
+                type="text"
+                placeholder="e.g. admin, advocate, staff"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

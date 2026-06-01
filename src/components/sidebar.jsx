@@ -20,22 +20,35 @@ export default function Sidebar() {
   return (
     <div className="w-64 h-screen bg-black text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40 print:hidden">
       <div>
-        <h1 className="text-2xl font-bold mb-6">LexDesk</h1>
+        {/* Branding Header with Logo */}
+        <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-5">
+          <div className="h-9 w-9 overflow-hidden bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800/80">
+            <img 
+              src="/law_logo.png" 
+              alt="LexDesk Emblem" 
+              className="h-full w-full object-cover" 
+            />
+          </div>
+          <h1 className="text-lg font-black tracking-tight text-white">LexDesk</h1>
+        </div>
 
-      <div className="mb-8">
-        <div className="text-sm text-gray-300">Signed in as</div>
-        <div className="font-semibold">
+      <div className="mb-8 bg-white/5 border border-white/5 p-4 rounded-xl">
+        <div className="text-[10px] text-gray-400 uppercase tracking-widest font-extrabold">Signed in as</div>
+        <div className="font-bold text-white text-sm mt-0.5">
           {status === "loading" ? "Loading..." : user?.name || "Admin"}
         </div>
-        <div className="text-xs text-gray-300 break-all">
+        <div className="text-[10px] text-gray-400 break-all mt-0.5 font-medium">
           {status === "loading" ? "" : user?.email || ""}
+        </div>
+        <div className="text-[9px] font-black uppercase tracking-widest text-amber-400 mt-1 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md inline-block">
+          {status === "loading" ? "" : user?.role || ""}
         </div>
 
         <div className="mt-4">
           <button
             type="button"
             onClick={() => signOut()}
-            className="w-full rounded-lg bg-white/10 hover:bg-white/15 px-3 py-2 text-sm"
+            className="w-full rounded-lg bg-white/10 hover:bg-white/15 px-3 py-2 text-xs font-semibold"
           >
             Logout
           </button>
