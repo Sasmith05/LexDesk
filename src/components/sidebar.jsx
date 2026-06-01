@@ -10,6 +10,7 @@ import {
   FileText,
   Receipt,
   Calendar,
+  FileSignature,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -150,6 +151,20 @@ export default function Sidebar() {
             </Link>
           </li>
         )}
+
+        <li>
+          <Link
+            href="/documents"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              pathname.startsWith("/documents")
+                ? "bg-white/10 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <FileSignature size={20} />
+            Documents
+          </Link>
+        </li>
       </ul>
       </div>
     </div>

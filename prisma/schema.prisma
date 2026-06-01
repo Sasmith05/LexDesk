@@ -16,14 +16,15 @@ model User {
 }
 
 model Client {
-  id            String        @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String
   phone         String
   address       String
-  createdAt     DateTime      @default(now())
+  createdAt     DateTime        @default(now())
   cases         Case[]
   notaryEntries NotaryEntry[]
   invoices      Invoice[]
+  documentDrafts DocumentDraft[]
 }
 
 model Case {
@@ -87,4 +88,24 @@ model InvoiceItem {
   
   invoiceId   String
   invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model DocumentTemplate {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  bodyText    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DocumentDraft {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
 }
