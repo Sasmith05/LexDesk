@@ -84,10 +84,17 @@ export default function Sidebar() {
         </li>
 
         <li>
-          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 cursor-not-allowed">
+          <Link
+            href="/notary"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              pathname.startsWith("/notary")
+                ? "bg-white/10 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
             <FileText size={20} />
             Notary
-          </div>
+          </Link>
         </li>
 
         <li>

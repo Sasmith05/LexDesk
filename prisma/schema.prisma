@@ -16,12 +16,13 @@ model User {
 }
 
 model Client {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String
-  address   String
-  createdAt DateTime @default(now())
-  cases     Case[]
+  id            String        @id @default(cuid())
+  name          String
+  phone         String
+  address       String
+  createdAt     DateTime      @default(now())
+  cases         Case[]
+  notaryEntries NotaryEntry[]
 }
 
 model Case {
@@ -33,4 +34,21 @@ model Case {
   createdAt   DateTime @default(now())
   clientId    String
   client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model NotaryEntry {
+  id           String   @id @default(cuid())
+  serialNo     Int      @unique @default(autoincrement())
+  notaryDate   DateTime @default(now())
+  documentName String   // e.g. Affidavit, Agreement, GPA, Sale Deed
+  executants   String   // Name(s) of people executing the document
+  witnesses    String   // Name(s) of witnesses
+  stampDuty    Float    @default(0) // Stamp duty paid in ₹
+  notaryFee    Float    @default(0) // Notary fee collected in ₹
+  remarks      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  clientId     String?
+  client       Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
 }
