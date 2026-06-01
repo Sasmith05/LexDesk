@@ -22,3 +22,12 @@ model Client {
   address   String
   createdAt DateTime @default(now())
 }
+
+model Case {
+  id          String   @id @default(cuid())
+  title       String
+  courtName   String
+  status      String
+  hearingDate DateTime
+  createdAt   DateTime @default(now())
+}
