@@ -71,36 +71,33 @@ export async function PUT(request, { params }) {
     const taxAmount = subtotal * (parsedTax / 100);
     const totalAmount = Math.max(0, subtotal + taxAmount - parsedDiscount);
 
-    // Update in a transaction: prune old items, apply main updates, write new items
-    const updatedInvoice = await prisma.$transaction(async (tx) => {
-      // Delete existing line items
-      await tx.invoiceItem.deleteMany({
-        where: { invoiceId: id },
-      });
+    // Prune existing line items and save updates sequentially
+    await prisma.invoiceItem.deleteMany({
+      where: { invoiceId: id },
+    });
 
-      // Update invoice and re-create line items
-      return await tx.invoice.update({
-        where: { id },
-        data: {
-          clientId,
-          caseId: caseId || null,
-          dueDate: new Date(dueDate),
-          status,
-          tax: parsedTax,
-          discount: parsedDiscount,
-          totalAmount,
-          paymentMethod: paymentMethod || "Cash",
-          remarks: remarks || "",
-          items: {
-            create: itemsData,
-          },
+    // Update invoice and re-create line items
+    const updatedInvoice = await prisma.invoice.update({
+      where: { id },
+      data: {
+        clientId,
+        caseId: caseId || null,
+        dueDate: new Date(dueDate),
+        status,
+        tax: parsedTax,
+        discount: parsedDiscount,
+        totalAmount,
+        paymentMethod: paymentMethod || "Cash",
+        remarks: remarks || "",
+        items: {
+          create: itemsData,
         },
-        include: {
-          items: true,
-          client: true,
-          case: true,
-        },
-      });
+      },
+      include: {
+        items: true,
+        client: true,
+        case: true,
+      },
     });
 
     return NextResponse.json(updatedInvoice);
