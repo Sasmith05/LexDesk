@@ -12,6 +12,7 @@ export async function GET(request) {
   try {
     const cases = await prisma.case.findMany({
       orderBy: { hearingDate: "asc" },
+      include: { client: true },
     });
     return NextResponse.json(cases);
   } catch (error) {
@@ -28,11 +29,11 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { title, courtName, status, hearingDate } = body;
+    const { title, courtName, status, hearingDate, clientId } = body;
 
-    if (!title || !courtName || !status || !hearingDate) {
+    if (!title || !courtName || !status || !hearingDate || !clientId) {
       return NextResponse.json(
-        { error: "Title, court name, status, and hearing date are required" },
+        { error: "Title, court name, status, hearing date, and client are required" },
         { status: 400 }
       );
     }
@@ -43,6 +44,7 @@ export async function POST(request) {
         courtName,
         status,
         hearingDate: new Date(hearingDate),
+        clientId,
       },
     });
 

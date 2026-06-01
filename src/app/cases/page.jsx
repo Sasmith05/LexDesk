@@ -87,7 +87,8 @@ export default function CasesPage() {
     (c) =>
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.courtName.toLowerCase().includes(search.toLowerCase()) ||
-      c.status.toLowerCase().includes(search.toLowerCase())
+      c.status.toLowerCase().includes(search.toLowerCase()) ||
+      (c.client?.name || "").toLowerCase().includes(search.toLowerCase())
   );
 
   // Metrics
@@ -209,6 +210,7 @@ export default function CasesPage() {
                 <TableHeader>
                   <TableRow className="bg-zinc-50/50 hover:bg-zinc-50/50">
                     <TableHead className="py-4 font-semibold text-zinc-700 pl-6">Case Title</TableHead>
+                    <TableHead className="py-4 font-semibold text-zinc-700">Associated Client</TableHead>
                     <TableHead className="py-4 font-semibold text-zinc-700">Jurisdiction / Court</TableHead>
                     <TableHead className="py-4 font-semibold text-zinc-700">Status</TableHead>
                     <TableHead className="py-4 font-semibold text-zinc-700">Hearing Date</TableHead>
@@ -227,6 +229,14 @@ export default function CasesPage() {
                             <p className="font-semibold text-zinc-900">{caseItem.title}</p>
                             <p className="text-xs text-zinc-400">ID: {caseItem.id.substring(0, 8)}...</p>
                           </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4 text-zinc-800 font-semibold">
+                        <div className="flex items-center gap-2">
+                          <div className="h-6 w-6 bg-zinc-100 rounded-full flex items-center justify-center text-[10px] font-bold text-zinc-600">
+                            {(caseItem.client?.name || "U").charAt(0).toUpperCase()}
+                          </div>
+                          {caseItem.client?.name || "Unassigned"}
                         </div>
                       </TableCell>
                       <TableCell className="py-4 text-zinc-600 font-medium">

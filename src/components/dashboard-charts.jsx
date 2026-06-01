@@ -133,7 +133,7 @@ export default function DashboardCharts({
               </span>
               <span className="flex items-center gap-1.5 text-emerald-600">
                 <span className="h-2 w-2 bg-emerald-500 rounded-full" />
-                Billing ($)
+                Billing (₹)
               </span>
             </div>
           </div>
@@ -170,6 +170,7 @@ export default function DashboardCharts({
                   axisLine={false} 
                   tickLine={false} 
                   tick={{ fill: '#a1a1aa', fontSize: 12 }} 
+                  tickFormatter={(val) => `₹${val}`}
                 />
                 <Tooltip 
                   contentStyle={{ 
@@ -179,6 +180,7 @@ export default function DashboardCharts({
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                   }}
                   labelStyle={{ fontWeight: 'bold', color: '#18181b' }}
+                  formatter={(value, name) => name === 'Revenue' ? [`₹${value}`, 'Billing'] : [value, name]}
                 />
                 <Area 
                   yAxisId="left"

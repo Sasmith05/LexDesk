@@ -13,6 +13,7 @@ export async function GET(request, { params }) {
     const { id } = await params;
     const caseItem = await prisma.case.findUnique({
       where: { id },
+      include: { client: true },
     });
 
     if (!caseItem) {
@@ -35,11 +36,11 @@ export async function PUT(request, { params }) {
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, courtName, status, hearingDate } = body;
+    const { title, courtName, status, hearingDate, clientId } = body;
 
-    if (!title || !courtName || !status || !hearingDate) {
+    if (!title || !courtName || !status || !hearingDate || !clientId) {
       return NextResponse.json(
-        { error: "Title, court name, status, and hearing date are required" },
+        { error: "Title, court name, status, hearing date, and client are required" },
         { status: 400 }
       );
     }
@@ -51,6 +52,7 @@ export async function PUT(request, { params }) {
         courtName,
         status,
         hearingDate: new Date(hearingDate),
+        clientId,
       },
     });
 

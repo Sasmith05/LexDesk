@@ -4,7 +4,7 @@ import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/components/sidebar";
-import { Edit3, ArrowLeft, Loader2, Calendar, FileText, Landmark } from "lucide-react";
+import { Edit3, ArrowLeft, Loader2, Calendar, FileText, Landmark, Users } from "lucide-react";
 
 export default function EditCasePage({ params }) {
   const router = useRouter();
@@ -14,16 +14,40 @@ export default function EditCasePage({ params }) {
   const [courtName, setCourtName] = useState("");
   const [status, setStatus] = useState("Open");
   const [hearingDate, setHearingDate] = useState("");
+  const [clientId, setClientId] = useState("");
   
-  const [fetching, setFetching] = useState(true);
+  const [clients, setClients] = useState([]);
+  const [fetchingClients, setFetchingClients] = useState(true);
+  const [fetchingCase, setFetchingCase] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
   useEffect(() => {
     if (id) {
       fetchCaseDetails();
     }
   }, [id]);
+
+  async function fetchClients() {
+    try {
+      const res = await fetch("/api/clients");
+      if (res.ok) {
+        const data = await res.json();
+        setClients(data);
+      } else {
+        setError("Failed to load clients list.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to connect to clients directory.");
+    } finally {
+      setFetchingClients(false);
+    }
+  }
 
   async function fetchCaseDetails() {
     try {
@@ -34,6 +58,7 @@ export default function EditCasePage({ params }) {
         setCourtName(data.courtName);
         setStatus(data.status);
         setHearingDate(formatDateTimeLocal(data.hearingDate));
+        setClientId(data.clientId);
       } else {
         setError("Failed to fetch case details.");
       }
@@ -41,7 +66,7 @@ export default function EditCasePage({ params }) {
       console.error(err);
       setError("An error occurred while loading case data.");
     } finally {
-      setFetching(false);
+      setFetchingCase(false);
     }
   }
 
@@ -59,8 +84,8 @@ export default function EditCasePage({ params }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!title.trim() || !courtName.trim() || !status || !hearingDate) {
-      setError("All fields are required.");
+    if (!title.trim() || !courtName.trim() || !status || !hearingDate || !clientId) {
+      setError("All fields are required, including an associated client.");
       return;
     }
     
@@ -73,7 +98,7 @@ export default function EditCasePage({ params }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, courtName, status, hearingDate }),
+        body: JSON.stringify({ title, courtName, status, hearingDate, clientId }),
       });
 
       if (res.ok) {
@@ -89,6 +114,8 @@ export default function EditCasePage({ params }) {
       setLoading(false);
     }
   }
+
+  const isPageLoading = fetchingClients || fetchingCase;
 
   return (
     <div className="flex bg-zinc-50 min-h-screen font-sans">
@@ -110,15 +137,15 @@ export default function EditCasePage({ params }) {
             </span>
             Edit Case & Reschedule
           </h1>
-          <p className="text-zinc-500 mt-2">Modify the details of your legal lawsuit and hear schedule.</p>
+          <p className="text-zinc-500 mt-2">Modify the details of your legal lawsuit and associated client in LexDesk.</p>
         </div>
 
         {/* Form Box */}
         <div className="bg-white border border-zinc-200/85 p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-          {fetching ? (
+          {isPageLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-3">
               <div className="h-8 w-8 border-4 border-zinc-300 border-t-zinc-950 rounded-full animate-spin" />
-              <p className="text-sm text-zinc-500 font-medium">Retrieving case record...</p>
+              <p className="text-sm text-zinc-500 font-medium">Retrieving case record details...</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -144,6 +171,27 @@ export default function EditCasePage({ params }) {
                   required
                   className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent rounded-xl px-4 py-3 text-sm transition-all placeholder:text-zinc-400 text-zinc-900"
                 />
+              </div>
+
+              {/* Client Selector Field */}
+              <div className="space-y-2">
+                <label htmlFor="client" className="text-sm font-semibold text-zinc-800 flex items-center gap-1.5">
+                  <Users size={15} className="text-zinc-400" />
+                  Associated Client
+                </label>
+                <select
+                  id="client"
+                  value={clientId}
+                  onChange={(e) => setClientId(e.target.value)}
+                  required
+                  className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent rounded-xl px-4 py-3 text-sm bg-white transition-all text-zinc-900 font-semibold"
+                >
+                  {clients.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} ({c.phone})
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Court Name Field */}
