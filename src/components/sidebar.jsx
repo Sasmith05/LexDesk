@@ -17,6 +17,15 @@ export default function Sidebar() {
   const user = session?.user;
   const pathname = usePathname() || "";
 
+  const handleLogout = async () => {
+    try {
+      await signOut({ callbackUrl: "/login" });
+    } catch (err) {
+      console.error("NextAuth signOut failed, using manual fallback:", err);
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <div className="w-64 h-screen bg-black text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40 print:hidden">
       <div>
@@ -47,7 +56,7 @@ export default function Sidebar() {
         <div className="mt-4">
           <button
             type="button"
-            onClick={() => signOut()}
+            onClick={handleLogout}
             className="w-full rounded-lg bg-white/10 hover:bg-white/15 px-3 py-2 text-xs font-semibold"
           >
             Logout
