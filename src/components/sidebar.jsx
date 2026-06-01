@@ -9,6 +9,7 @@ import {
   Briefcase,
   FileText,
   Receipt,
+  Calendar,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -81,6 +82,20 @@ export default function Sidebar() {
           >
             <Briefcase size={20} />
             Cases
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            href="/calendar"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              pathname.startsWith("/calendar")
+                ? "bg-white/10 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <Calendar size={20} />
+            Calendar
           </Link>
         </li>
 

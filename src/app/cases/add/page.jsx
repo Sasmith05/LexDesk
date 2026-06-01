@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/components/sidebar";
 import { Scale, ArrowLeft, Loader2, Calendar, FileText, Landmark, Users } from "lucide-react";
 
-export default function AddCasePage() {
+function AddCaseForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [title, setTitle] = useState("");
   const [courtName, setCourtName] = useState("");
   const [status, setStatus] = useState("Open");
@@ -21,7 +23,15 @@ export default function AddCasePage() {
 
   useEffect(() => {
     fetchClients();
-  }, []);
+    
+    // Pre-populate date if navigated from Calendar
+    if (searchParams) {
+      const dateParam = searchParams.get("date");
+      if (dateParam) {
+        setHearingDate(`${dateParam}T10:00`); // default to 10:00 AM on that day
+      }
+    }
+  }, [searchParams]);
 
   async function fetchClients() {
     try {
@@ -250,5 +260,20 @@ export default function AddCasePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function AddCasePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex bg-zinc-50 min-h-screen font-sans items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 border-4 border-zinc-300 border-t-zinc-950 rounded-full animate-spin" />
+          <p className="text-sm text-zinc-500 font-medium">Booting cases form...</p>
+        </div>
+      </div>
+    }>
+      <AddCaseForm />
+    </Suspense>
   );
 }
