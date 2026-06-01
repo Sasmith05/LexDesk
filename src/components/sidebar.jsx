@@ -17,7 +17,7 @@ export default function Sidebar() {
   const pathname = usePathname() || "";
 
   return (
-    <div className="w-64 h-screen bg-black text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40">
+    <div className="w-64 h-screen bg-black text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40 print:hidden">
       <div>
         <h1 className="text-2xl font-bold mb-6">LexDesk</h1>
 
@@ -99,10 +99,17 @@ export default function Sidebar() {
         </li>
 
         <li>
-          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 cursor-not-allowed">
+          <Link
+            href="/invoices"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              pathname.startsWith("/invoices")
+                ? "bg-white/10 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
             <Receipt size={20} />
             Invoices
-          </div>
+          </Link>
         </li>
       </ul>
       </div>

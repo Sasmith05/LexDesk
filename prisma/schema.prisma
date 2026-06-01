@@ -23,17 +23,19 @@ model Client {
   createdAt     DateTime      @default(now())
   cases         Case[]
   notaryEntries NotaryEntry[]
+  invoices      Invoice[]
 }
 
 model Case {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   courtName   String
   status      String
   hearingDate DateTime
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   clientId    String
-  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  client      Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  invoices    Invoice[]
 }
 
 model NotaryEntry {
@@ -51,4 +53,38 @@ model NotaryEntry {
   
   clientId     String?
   client       Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  invoiceNumber Int           @unique @default(autoincrement())
+  invoiceDate   DateTime      @default(now())
+  dueDate       DateTime
+  status        String        // Paid, Unpaid, Overdue
+  tax           Float         @default(0)  // Tax percentage (e.g. GST)
+  discount      Float         @default(0)  // Discount value in ₹
+  totalAmount   Float         // Calculated total in ₹
+  paymentMethod String        @default("Cash") // Cash, UPI, Bank Transfer, Cheque
+  remarks       String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  caseId        String?
+  case          Case?         @relation(fields: [caseId], references: [id], onDelete: SetNull)
+  
+  items         InvoiceItem[]
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  description String   // Line item description (e.g. Consultation fee)
+  quantity    Int      @default(1)
+  unitPrice   Float    // Price per unit in ₹
+  amount      Float    // quantity * unitPrice in ₹
+  
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 }
