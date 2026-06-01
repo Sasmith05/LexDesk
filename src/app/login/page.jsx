@@ -133,12 +133,8 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        {/* Subtle Footer */}
-        <div className="mt-8 text-center text-[10px] text-zinc-600 font-semibold tracking-wider uppercase">
-          Secure JWT Authentication Active
-        </div>
       </div>
     </div>
   );
 }
+
