@@ -40,7 +40,7 @@ export default function Sidebar() {
         <div className="text-[10px] text-gray-400 break-all mt-0.5 font-medium">
           {status === "loading" ? "" : user?.email || ""}
         </div>
-        <div className="text-[9px] font-black uppercase tracking-widest text-amber-400 mt-1 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md inline-block">
+        <div className="text-[9px] font-black uppercase tracking-widest text-zinc-200 mt-1.5 bg-white/10 border border-white/5 px-2 py-0.5 rounded-md inline-block">
           {status === "loading" ? "" : user?.role || ""}
         </div>
 
