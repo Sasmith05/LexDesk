@@ -10,7 +10,7 @@ export default function Sidebar() {
   return (
     <div className="w-64 h-screen bg-black text-white p-5">
       <h1 className="text-2xl font-bold mb-10">
-        Legal ERP
+        LexDesk
       </h1>
 
       <ul className="space-y-6">

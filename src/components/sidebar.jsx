@@ -18,7 +18,7 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 h-screen bg-black text-white p-5">
-      <h1 className="text-2xl font-bold mb-6">Legal ERP</h1>
+      <h1 className="text-2xl font-bold mb-6">LexDesk</h1>
 
       <div className="mb-8">
         <div className="text-sm text-gray-300">Signed in as</div>
