@@ -12,9 +12,9 @@
 
 - [x] Run local checks
   - [x] `npm run build`
-  - [ ] Verify login works
-  - [ ] Verify `/dashboard` blocked when logged out
-  - [ ] Verify sidebar shows name/email
-  - [ ] Verify logout works
+  - [x] Verify login works (Simplified username logins configured)
+  - [x] Verify `/dashboard` blocked when logged out
+  - [x] Verify sidebar shows name/email (Capitalized display name & email rendered)
+  - [x] Verify logout works (Fail-safe redirect fallback implemented)
 
 
