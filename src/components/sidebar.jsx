@@ -28,11 +28,11 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-screen bg-black text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40 print:hidden">
+    <div className="w-64 h-screen bg-[#0b0b0d] border-r border-white/[0.04] text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40 print:hidden">
       <div>
         {/* Branding Header with Logo */}
         <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-5">
-          <div className="h-9 w-9 overflow-hidden bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800/80">
+          <div className="h-9 w-9 overflow-hidden bg-black rounded-lg flex items-center justify-center border border-white/[0.08]">
             <img 
               src="/law_logo.png" 
               alt="LexDesk Emblem" 
@@ -65,17 +65,20 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <ul className="space-y-4">
+      <ul className="space-y-2">
         <li>
           <Link
             href="/dashboard"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
               pathname === "/dashboard"
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
             }`}
           >
-            <LayoutDashboard size={20} />
+            {pathname === "/dashboard" && (
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+            )}
+            <LayoutDashboard size={18} />
             Dashboard
           </Link>
         </li>
@@ -83,13 +86,16 @@ export default function Sidebar() {
         <li>
           <Link
             href="/clients"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
               pathname.startsWith("/clients")
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
             }`}
           >
-            <Users size={20} />
+            {pathname.startsWith("/clients") && (
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+            )}
+            <Users size={18} />
             Clients
           </Link>
         </li>
@@ -97,13 +103,16 @@ export default function Sidebar() {
         <li>
           <Link
             href="/cases"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
               pathname.startsWith("/cases")
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
             }`}
           >
-            <Briefcase size={20} />
+            {pathname.startsWith("/cases") && (
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+            )}
+            <Briefcase size={18} />
             Cases
           </Link>
         </li>
@@ -111,13 +120,16 @@ export default function Sidebar() {
         <li>
           <Link
             href="/notary"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
               pathname.startsWith("/notary")
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
             }`}
           >
-            <FileText size={20} />
+            {pathname.startsWith("/notary") && (
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+            )}
+            <FileText size={18} />
             Notary
           </Link>
         </li>
@@ -125,13 +137,16 @@ export default function Sidebar() {
         <li>
           <Link
             href="/calendar"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
               pathname.startsWith("/calendar")
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
             }`}
           >
-            <Calendar size={20} />
+            {pathname.startsWith("/calendar") && (
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+            )}
+            <Calendar size={18} />
             Calendar
           </Link>
         </li>
@@ -140,13 +155,16 @@ export default function Sidebar() {
           <li>
             <Link
               href="/invoices"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
                 pathname.startsWith("/invoices")
-                  ? "bg-white/10 text-white font-semibold"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
               }`}
             >
-              <Receipt size={20} />
+              {pathname.startsWith("/invoices") && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+              )}
+              <Receipt size={18} />
               Invoices
             </Link>
           </li>
@@ -155,13 +173,16 @@ export default function Sidebar() {
         <li>
           <Link
             href="/documents"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative ${
               pathname.startsWith("/documents")
-                ? "bg-white/10 text-white font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-white/[0.06] text-white font-bold pl-4 shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.02]"
             }`}
           >
-            <FileSignature size={20} />
+            {pathname.startsWith("/documents") && (
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-lg" />
+            )}
+            <FileSignature size={18} />
             Documents
           </Link>
         </li>

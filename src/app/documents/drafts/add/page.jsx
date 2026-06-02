@@ -243,21 +243,21 @@ function DraftMergerForm() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             
             {/* Control Panel (2 Columns) */}
             <div className="lg:col-span-2 space-y-6">
               
               {/* Selector Card */}
-              <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.02)] space-y-4">
-                <h3 className="text-sm font-black uppercase tracking-wider text-zinc-800 flex items-center gap-2">
-                  <FileSignature size={16} />
+              <div className="bg-white border border-zinc-200/85 p-6 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] space-y-4">
+                <h3 className="text-xs font-black uppercase tracking-wider text-zinc-800 flex items-center gap-2">
+                  <FileSignature size={15} className="text-zinc-400" />
                   1. Choose Blueprint
                 </h3>
 
                 {/* Client Selection */}
                 <div className="space-y-1.5">
-                  <label htmlFor="clientSelect" className="text-xs font-semibold text-zinc-500">
+                  <label htmlFor="clientSelect" className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
                     Billed Client Target
                   </label>
                   <select
@@ -265,7 +265,7 @@ function DraftMergerForm() {
                     value={selectedClientId}
                     disabled={isFinalized}
                     onChange={(e) => setSelectedClientId(e.target.value)}
-                    className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent rounded-xl px-3.5 py-2.5 text-xs bg-white font-bold text-zinc-900 disabled:opacity-60"
+                    className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950/15 focus:border-zinc-950 rounded-xl px-3 py-2.5 text-xs bg-zinc-50/50 hover:bg-zinc-50 font-bold text-zinc-900 disabled:opacity-60 transition-all cursor-pointer"
                   >
                     {clients.map(c => (
                       <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>
@@ -275,7 +275,7 @@ function DraftMergerForm() {
 
                 {/* Template Selection */}
                 <div className="space-y-1.5">
-                  <label htmlFor="templateSelect" className="text-xs font-semibold text-zinc-500">
+                  <label htmlFor="templateSelect" className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
                     Document Template Base
                   </label>
                   <select
@@ -283,7 +283,7 @@ function DraftMergerForm() {
                     value={selectedTemplateId}
                     disabled={isFinalized}
                     onChange={(e) => setSelectedTemplateId(e.target.value)}
-                    className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent rounded-xl px-3.5 py-2.5 text-xs bg-white font-bold text-zinc-900 disabled:opacity-60"
+                    className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950/15 focus:border-zinc-950 rounded-xl px-3 py-2.5 text-xs bg-zinc-50/50 hover:bg-zinc-50 font-bold text-zinc-900 disabled:opacity-60 transition-all cursor-pointer"
                   >
                     {templates.map(t => (
                       <option key={t.id} value={t.id}>{t.title}</option>
@@ -294,9 +294,9 @@ function DraftMergerForm() {
 
               {/* Variable Input Card */}
               {!isFinalized ? (
-                <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.02)] space-y-4">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-zinc-800 flex items-center gap-2">
-                    <Edit size={16} />
+                <div className="bg-white border border-zinc-200/85 p-6 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] space-y-4">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-800 flex items-center gap-2">
+                    <Edit size={15} className="text-zinc-400" />
                     2. Fill Template Variables
                   </h3>
                   
@@ -308,13 +308,13 @@ function DraftMergerForm() {
                         const isAutoMerged = key === "clientName" || key === "clientAddress" || key === "clientPhone";
                         
                         return (
-                          <div key={key} className="space-y-1.5 border-b border-zinc-50 pb-3">
+                          <div key={key} className="space-y-1.5 border-b border-zinc-100 pb-3">
                             <div className="flex items-center justify-between">
                               <label className="text-xs font-bold text-zinc-700 font-mono">
                                 {"{{"}{key}{"}}"}
                               </label>
                               {isAutoMerged && (
-                                <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Auto-merged</span>
+                                <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60 shadow-[0_1px_2px_rgba(16,185,129,0.05)]">Auto-merged</span>
                               )}
                             </div>
                             <input
@@ -322,10 +322,10 @@ function DraftMergerForm() {
                               value={variables[key]}
                               onChange={(e) => setVariables({ ...variables, [key]: e.target.value })}
                               placeholder={`Enter ${key}...`}
-                              className={`w-full border rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent ${
+                              className={`w-full border rounded-xl px-3 py-2 text-xs focus:outline-none transition-all ${
                                 isAutoMerged 
-                                  ? "border-emerald-100 bg-emerald-50/20 text-zinc-900 font-semibold" 
-                                  : "border-zinc-200 bg-white text-zinc-900 font-medium"
+                                  ? "border-emerald-200 bg-emerald-50/15 text-zinc-900 font-semibold focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500" 
+                                  : "border-zinc-200 bg-white text-zinc-900 font-medium focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950"
                               }`}
                             />
                           </div>
@@ -336,16 +336,16 @@ function DraftMergerForm() {
 
                   <button
                     onClick={handleFinalize}
-                    className="w-full inline-flex items-center justify-center gap-2 bg-zinc-950 text-zinc-50 hover:bg-zinc-850 active:bg-zinc-900 px-4 py-3 rounded-xl text-xs font-bold shadow-sm transition-all"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-zinc-950 text-zinc-50 hover:bg-zinc-900 active:bg-zinc-950 px-4 py-3 rounded-xl text-xs font-bold shadow-sm transition-all"
                   >
-                    <CheckCircle2 size={15} />
+                    <CheckCircle2 size={14} className="text-amber-400" />
                     Compile & Finalize Text
                   </button>
                 </div>
               ) : (
-                <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.02)] space-y-4">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-zinc-800 flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-emerald-500" />
+                <div className="bg-white border border-zinc-200/85 p-6 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] space-y-4">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-800 flex items-center gap-2">
+                    <CheckCircle2 size={15} className="text-emerald-500" />
                     3. Save Document
                   </h3>
                   
@@ -356,7 +356,7 @@ function DraftMergerForm() {
                   )}
 
                   <div className="space-y-1.5">
-                    <label htmlFor="draftTitle" className="text-xs font-bold text-zinc-500">
+                    <label htmlFor="draftTitle" className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
                       Finalized Draft Title
                     </label>
                     <input
@@ -364,21 +364,21 @@ function DraftMergerForm() {
                       type="text"
                       value={draftTitle}
                       onChange={(e) => setDraftTitle(e.target.value)}
-                      className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent rounded-xl px-3.5 py-2.5 text-xs bg-white font-bold text-zinc-900"
+                      className="w-full border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950 rounded-xl px-3 py-2.5 text-xs bg-white font-bold text-zinc-900"
                     />
                   </div>
 
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setIsFinalized(false)}
-                      className="flex-1 border border-zinc-200 hover:bg-zinc-50 px-3 py-2.5 rounded-xl text-xs font-semibold text-zinc-700 transition-all"
+                      className="flex-1 border border-zinc-200 hover:bg-zinc-50 px-3 py-2.5 rounded-xl text-xs font-bold text-zinc-600 transition-all"
                     >
                       Back to Inputs
                     </button>
                     <button
                       onClick={handleSaveDraft}
                       disabled={saving}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 bg-zinc-950 text-zinc-50 hover:bg-zinc-850 active:bg-zinc-900 px-3 py-2.5 rounded-xl text-xs font-bold shadow-sm disabled:opacity-50 transition-all"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 bg-zinc-950 text-zinc-50 hover:bg-zinc-900 active:bg-zinc-950 px-3 py-2.5 rounded-xl text-xs font-bold shadow-sm disabled:opacity-50 transition-all"
                     >
                       {saving ? (
                         <>
@@ -394,28 +394,44 @@ function DraftMergerForm() {
               )}
             </div>
 
-            {/* Document Preview / Polish area (3 Columns) */}
+            {/* Document Preview / Polish area (3 Columns) - Simulated A4 Sheet */}
             <div className="lg:col-span-3">
-              <div className="bg-white border border-zinc-200/80 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.02)] h-full min-h-[500px] flex flex-col">
-                <div className="border-b border-zinc-100 px-6 py-4 flex items-center justify-between bg-zinc-50/50 rounded-t-2xl">
-                  <span className="text-xs uppercase tracking-widest font-black text-zinc-400 flex items-center gap-1.5">
-                    <FileText size={14} />
-                    {isFinalized ? "Final Text Customization Editor" : "Live Variable Merging Preview"}
+              <div className="bg-zinc-100/60 border border-zinc-200/80 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] h-full min-h-[600px] flex flex-col overflow-hidden">
+                <div className="border-b border-zinc-200/80 px-6 py-4 flex items-center justify-between bg-white/80 backdrop-blur-sm">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-zinc-500 flex items-center gap-2">
+                    <FileText size={14} className="text-zinc-400" />
+                    {isFinalized ? "Final Text Customization Editor (A4 Sheet)" : "Live Variable Merging Preview (A4 Sheet)"}
                   </span>
                 </div>
                 
-                <div className="flex-1 p-8">
+                <div className="flex-1 p-8 flex items-start justify-center overflow-y-auto max-h-[650px] bg-zinc-50/50">
                   {!isFinalized ? (
-                    <div className="border border-zinc-200/80 p-8 rounded-2xl min-h-[400px] bg-zinc-50/20 text-zinc-800 text-sm whitespace-pre-wrap font-serif leading-relaxed text-justify shadow-inner">
-                      {liveMergedText || <p className="text-zinc-300 italic font-sans text-center mt-20">Choose a template blueprint to load variable structures.</p>}
+                    <div className="w-full max-w-[595px] min-h-[500px] bg-white border border-zinc-200/80 rounded shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08),_0_0_0_1px_rgba(0,0,0,0.02)] py-16 px-12 text-zinc-900 text-sm whitespace-pre-wrap font-serif leading-relaxed text-justify relative">
+                      {/* Premium legal paper double border */}
+                      <div className="absolute inset-0 pointer-events-none border-[12px] border-double border-zinc-100/50 m-4 rounded" />
+                      
+                      {liveMergedText ? (
+                        <div className="relative z-10">{liveMergedText}</div>
+                      ) : (
+                        <div className="relative z-10 flex flex-col items-center justify-center h-full min-h-[300px] text-zinc-300 italic font-sans text-center">
+                          <FileText size={48} className="text-zinc-200 mb-4 animate-pulse" />
+                          Choose a template blueprint to load variable structures.
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <textarea
-                      value={draftContent}
-                      onChange={(e) => setDraftContent(e.target.value)}
-                      className="w-full border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400 rounded-2xl p-8 text-sm font-serif leading-relaxed text-zinc-950 bg-white h-[450px] resize-none text-justify"
-                      placeholder="Add final statements or customize sentences directly here before printing..."
-                    />
+                    <div className="w-full max-w-[595px] min-h-[500px] bg-white border border-zinc-200/80 rounded shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08),_0_0_0_1px_rgba(0,0,0,0.02)] relative flex flex-col">
+                      {/* Premium legal paper double border */}
+                      <div className="absolute inset-0 pointer-events-none border-[12px] border-double border-zinc-100/50 m-4 rounded" />
+                      
+                      <textarea
+                        value={draftContent}
+                        onChange={(e) => setDraftContent(e.target.value)}
+                        className="w-full flex-1 border-0 focus:outline-none focus:ring-0 py-16 px-12 text-sm font-serif leading-relaxed text-zinc-950 bg-transparent resize-none text-justify relative z-10"
+                        placeholder="Add final statements or customize sentences directly here before printing..."
+                        style={{ minHeight: "450px" }}
+                      />
+                    </div>
                   )}
                 </div>
               </div>

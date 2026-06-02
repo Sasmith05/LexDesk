@@ -163,61 +163,67 @@ export default function DocumentsDashboard() {
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
           {/* Reusable Templates Card */}
-          <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex items-center gap-5">
-            <div className="h-12 w-12 bg-zinc-100 rounded-xl flex items-center justify-center text-zinc-800">
-              <Layers size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-zinc-500">Legal Templates</p>
-              <h3 className="text-2xl font-bold text-zinc-900 mt-0.5">{templates.length}</h3>
+          <div className="p-1 rounded-2xl bg-zinc-100 border border-zinc-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.012)] hover:border-zinc-300 hover:shadow-[0_12px_40px_rgb(0,0,0,0.03)] hover:bg-zinc-200/50 transition-all duration-300 group">
+            <div className="bg-white border border-zinc-200/40 p-5 rounded-[13px] flex items-center gap-5">
+              <div className="h-12 w-12 bg-zinc-50 border border-zinc-200/60 rounded-xl flex items-center justify-center text-zinc-800 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <Layers size={18} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Legal Templates</p>
+                <h3 className="text-2xl font-black text-zinc-900 mt-0.5">{templates.length}</h3>
+              </div>
             </div>
           </div>
 
           {/* Generated Drafts Card */}
-          <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex items-center gap-5">
-            <div className="h-12 w-12 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center">
-              <FileText size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-zinc-500">Client Drafts</p>
-              <h3 className="text-2xl font-bold text-emerald-700 mt-0.5">{drafts.length}</h3>
+          <div className="p-1 rounded-2xl bg-zinc-100 border border-zinc-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.012)] hover:border-zinc-300 hover:shadow-[0_12px_40px_rgb(0,0,0,0.03)] hover:bg-zinc-200/50 transition-all duration-300 group">
+            <div className="bg-white border border-zinc-200/40 p-5 rounded-[13px] flex items-center gap-5">
+              <div className="h-12 w-12 bg-emerald-50/50 text-emerald-700 border border-emerald-100 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <FileText size={18} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Client Drafts</p>
+                <h3 className="text-2xl font-black text-emerald-700 mt-0.5">{drafts.length}</h3>
+              </div>
             </div>
           </div>
 
           {/* Notaries linked */}
-          <div className="bg-white border border-zinc-200/80 p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex items-center gap-5">
-            <div className="h-12 w-12 bg-zinc-100 rounded-xl flex items-center justify-center text-zinc-800">
-              <FileSignature size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-zinc-500">Draft Engine Status</p>
-              <h3 className="text-sm font-bold text-zinc-800 mt-1 uppercase tracking-wider bg-zinc-100 border border-zinc-200 px-2.5 py-1.5 rounded-lg inline-block">Ready</h3>
+          <div className="p-1 rounded-2xl bg-zinc-100 border border-zinc-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.012)] hover:border-zinc-300 hover:shadow-[0_12px_40px_rgb(0,0,0,0.03)] hover:bg-zinc-200/50 transition-all duration-300 group">
+            <div className="bg-white border border-zinc-200/40 p-5 rounded-[13px] flex items-center gap-5">
+              <div className="h-12 w-12 bg-zinc-50 border border-zinc-200/60 rounded-xl flex items-center justify-center text-zinc-800 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <FileSignature size={18} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Draft Engine Status</p>
+                <h3 className="text-xs font-black text-zinc-800 mt-1.5 uppercase tracking-wider bg-zinc-50 border border-zinc-200/80 px-2.5 py-1 rounded-lg inline-block shadow-sm">Ready</h3>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Tab & List panel container */}
-        <div className="bg-white border border-zinc-200/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
+        <div className="bg-white border border-zinc-200/85 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.025)] overflow-hidden">
           {/* Controls */}
-          <div className="border-b border-zinc-100 bg-zinc-50/50 p-5 flex flex-col gap-4">
-            {/* Quick Status Tabs */}
-            <div className="flex items-center gap-2 border-b border-zinc-200 pb-3">
+          <div className="border-b border-zinc-100 bg-zinc-50/40 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Segmented Slider Toggles */}
+            <div className="bg-zinc-100 p-1 rounded-xl inline-flex items-center gap-1 self-start">
               <button
                 onClick={() => { setActiveTab("drafts"); setSearch(""); }}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`rounded-lg px-4 py-2 text-xs font-black transition-all duration-200 ${
                   activeTab === "drafts" 
-                    ? "bg-zinc-950 text-zinc-50 shadow-sm"
-                    : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+                    ? "bg-white text-zinc-950 shadow-sm"
+                    : "text-zinc-400 hover:text-zinc-900"
                 }`}
               >
                 Client Drafts ({drafts.length})
               </button>
               <button
                 onClick={() => { setActiveTab("templates"); setSearch(""); }}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`rounded-lg px-4 py-2 text-xs font-black transition-all duration-200 ${
                   activeTab === "templates" 
-                    ? "bg-zinc-950 text-zinc-50 shadow-sm"
-                    : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+                    ? "bg-white text-zinc-950 shadow-sm"
+                    : "text-zinc-400 hover:text-zinc-900"
                 }`}
               >
                 Document Templates ({templates.length})
@@ -225,18 +231,18 @@ export default function DocumentsDashboard() {
             </div>
 
             {/* Search Input and Counter */}
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="relative w-full sm:max-w-xs">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={15} />
                 <input
                   type="text"
-                  placeholder={activeTab === "drafts" ? "Search client name or draft title..." : "Search template name..."}
+                  placeholder={activeTab === "drafts" ? "Search client name or draft title..." : "Search template..."}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent transition-all placeholder:text-zinc-400 font-medium"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-zinc-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent transition-all placeholder:text-zinc-400 font-bold shadow-sm"
                 />
               </div>
-              <div className="ml-auto text-xs text-zinc-400 font-bold">
+              <div className="text-[10px] text-zinc-400 font-black tracking-wider uppercase self-end sm:self-auto">
                 Showing {activeTab === "drafts" ? filteredDrafts.length : filteredTemplates.length} records
               </div>
             </div>
