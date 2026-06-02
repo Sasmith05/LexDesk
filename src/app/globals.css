@@ -131,3 +131,17 @@
     @apply font-sans;
   }
 }
+
+/* Responsive Dashboard Overrides */
+@media (max-width: 767px) {
+  /* Force vertical layout on mobile devices */
+  .flex.bg-zinc-50.min-h-screen.font-sans,
+  .flex.bg-zinc-50.min-h-screen.font-sans.print\:bg-white.print\:block {
+    flex-direction: column !important;
+  }
+
+  /* Compact content margins/padding on mobile */
+  main.flex-1 {
+    padding: 1.25rem !important; /* equivalent to p-5 */
+  }
+}

@@ -57,7 +57,7 @@ export default function LoginPage() {
       <div className="absolute bottom-1/6 right-1/6 h-[500px] w-[500px] bg-zinc-700/10 rounded-full blur-[140px] animate-pulse duration-[8000ms]" />
 
       {/* Login Card */}
-      <div className="backdrop-blur-2xl bg-[#0e0e11]/80 border border-white/[0.08] p-10 rounded-[32px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-500">
+      <div className="backdrop-blur-2xl bg-[#0e0e11]/80 border border-white/[0.08] p-6 sm:p-10 rounded-[24px] sm:rounded-[32px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] w-full max-w-[400px] mx-4 relative z-10 animate-in fade-in zoom-in-95 duration-500">
         {/* Branding Header with Law Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="h-20 w-20 overflow-hidden bg-black rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-white/[0.08] mb-4 transform hover:scale-105 hover:rotate-2 transition-all duration-300">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,9 +12,12 @@ import {
   Receipt,
   Calendar,
   FileSignature,
+  Menu,
+  X,
 } from "lucide-react";
 
 export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
   const { data: session, status } = useSession();
   const user = session?.user;
   const pathname = usePathname() || "";
@@ -28,19 +32,62 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-screen bg-[#0b0b0d] border-r border-white/[0.04] text-white p-5 sticky top-0 flex-shrink-0 flex flex-col justify-between z-40 print:hidden">
-      <div>
-        {/* Branding Header with Logo */}
-        <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-5">
-          <div className="h-9 w-9 overflow-hidden bg-black rounded-lg flex items-center justify-center border border-white/[0.08]">
+    <>
+      {/* Mobile top header */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-[#0b0b0d] text-white border-b border-white/5 sticky top-0 z-30 w-full print:hidden">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 overflow-hidden bg-black rounded-lg flex items-center justify-center border border-white/[0.08]">
             <img 
               src="/law_logo.png" 
               alt="LexDesk Emblem" 
               className="h-full w-full object-cover" 
             />
           </div>
-          <h1 className="text-lg font-black tracking-tight text-white">LexDesk</h1>
+          <span className="text-md font-black tracking-tight">LexDesk</span>
         </div>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="p-2 text-zinc-400 hover:text-white transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu size={24} />
+        </button>
+      </div>
+
+      {/* Backdrop overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar drawer panel */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0b0b0d] border-r border-white/[0.04] text-white p-5 flex flex-col justify-between transition-transform duration-300 ease-in-out md:translate-x-0 md:sticky md:top-0 md:h-screen md:flex-shrink-0 print:hidden ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
+        <div>
+          {/* Branding Header with Logo */}
+          <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-5">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 overflow-hidden bg-black rounded-lg flex items-center justify-center border border-white/[0.08]">
+                <img 
+                  src="/law_logo.png" 
+                  alt="LexDesk Emblem" 
+                  className="h-full w-full object-cover" 
+                />
+              </div>
+              <h1 className="text-lg font-black tracking-tight text-white">LexDesk</h1>
+            </div>
+            {/* Mobile close button */}
+            <button 
+              onClick={() => setIsOpen(false)} 
+              className="md:hidden text-zinc-400 hover:text-white p-1"
+              aria-label="Close menu"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
       <div className="mb-8 bg-white/5 border border-white/5 p-4 rounded-xl">
         <div className="text-[10px] text-gray-400 uppercase tracking-widest font-extrabold">Signed in as</div>
@@ -189,5 +236,6 @@ export default function Sidebar() {
       </ul>
       </div>
     </div>
+    </>
   );
 }
