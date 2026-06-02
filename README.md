@@ -1,36 +1,172 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LexDesk — Legal Practice Management System
 
-## Getting Started
+LexDesk is a full-stack legal practice management platform designed for advocates and legal offices to manage clients, court cases, legal workflows, billing ledgers, and office operations digitally.
 
-First, run the development server:
+Built using modern full-stack technologies like Next.js, Prisma, PostgreSQL, and Tailwind CSS, the application follows a scalable SaaS-style architecture suitable for real-world legal management systems.
+
+---
+
+# 🚀 Features
+
+## Authentication & Access Control
+
+* Secure login and authentication system using **NextAuth**.
+* **Role-Based Access Control (RBAC)**: Distinguishes permissions between roles (e.g., `admin`, `advocate`, and `staff`).
+* Auto-redirection and session-protected route guards.
+
+## Dashboard & Analytics
+
+* Premium dashboard overview displaying real-time practice stats.
+* Dynamic interactive data charts using **Recharts**:
+  * **Monthly Case & Revenue Trend**: Area charts showing client litigations and billing revenue.
+  * **Case Status Split**: Pie chart indicating the distribution of open, pending, and closed cases.
+* Fully responsive sidebar navigation drawer for all devices.
+
+## Client Directory
+
+* Centralized record directory to log clients.
+* Full CRUD operations: Add new clients, view details, search, update info, or remove records.
+* Links clients dynamically to associated lawsuits, notary registers, and invoices.
+
+## Court Case Management
+
+* Track legal cases, court names, jurisdictions, and schedules.
+* Hearing date tracking and scheduling controls.
+* Filter cases by specific date ranges and search by title, court, or client.
+
+## Notary Register & Property Log
+
+* Dedicated notary journal module to log legal documents (GPA, Sale Deeds, Affidavits).
+* Logs executants, witnesses, collected notary fees, and stamp duty values.
+* Automatically updates notary ledger values dynamically.
+
+## Invoicing & Billing System
+
+* Full invoicing management: Add items, quantities, and unit prices (computes tax and discounts automatically).
+* Manage payment status (Paid, Unpaid, Overdue) and methods (UPI, Cash, Bank Transfer, Cheque).
+* Filter and search client ledgers easily.
+
+## Report Generation & Print Layouts
+
+* Generate printable case schedules, invoice ledger sheets, and notary registry reports.
+* Includes custom print-only CSS templates (hides UI buttons, navigation panels, and sidebar during print).
+
+## Modern Responsive UI
+
+* Sleek glassmorphism details, dark mode sidebar, and premium layouts.
+* **100% Mobile Responsive Layout**: Features mobile navigation bars, touch-dismissible drawers, and horizontal scrolling on wide data tables to support phone and tablet screens seamlessly.
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+* **Next.js** (App Router & React 19)
+* **Tailwind CSS v4** (Modern utility styles)
+* **Lucide React** (Vector icons)
+* **Recharts** (Visual analytics)
+
+## Backend
+* **Next.js Route Handlers** (REST APIs)
+* **NextAuth** (Authentication & Session provider)
+
+## Database
+* **PostgreSQL** (Database engine)
+* **Prisma ORM** (Database schema & client query builder)
+* **Supabase** (PostgreSQL hosting)
+
+## Deployment
+* **Vercel**
+
+---
+
+# 📂 Folder Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+src/
+ ├── app/         # Next.js App Router (pages, APIs, layouts, globals.css)
+ ├── components/  # Reusable UI widgets, sidebar navigation, and charts
+ ├── hooks/       # Custom React state hooks
+ ├── lib/         # Prisma client instantiation and server utilities
+ └── prisma/      # Schema definition files and seeds
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+# ⚙️ Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Clone the repository:
+```bash
+git clone https://github.com/Sasmith05/LexDesk.git
+```
 
-## Learn More
+Go to project folder:
+```bash
+cd LexDesk
+```
 
-To learn more about Next.js, take a look at the following resources:
+Install dependencies:
+```bash
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Generate Prisma Client:
+```bash
+npx prisma generate
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Run development server:
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+Open:
+[http://localhost:3000](http://localhost:3000)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+DATABASE_URL="postgresql://<user>:<password>@<host>/<db>"
+NEXTAUTH_SECRET="your-nextauth-secret-here"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+---
+
+# 🌐 Deployment
+
+The project is configured for deployment using:
+* **Vercel** (Frontend Hosting)
+* **Supabase** (Cloud PostgreSQL Database)
+
+---
+
+# 📸 Screenshots
+
+*(To add screenshots, capture your application screen and place the files inside the `/public` folder, then reference them here)*
+
+### Login Page
+![Login View](/public/login_page_preview.png)
+
+### Dashboard
+![Dashboard View](/public/dashboard_preview.png)
+
+### Invoicing & Billing
+![Invoices View](/public/invoices_preview.png)
+
+---
+
+# 🎯 Project Goal
+
+The goal of LexDesk is to digitize traditional legal office workflows and provide a centralized, secure, and highly responsive platform for managing legal records, clients, cases, billing statements, and notary activities.
+
+---
+
+# 👨‍💻 Author
+
+**Sasmith05**
+* GitHub: [https://github.com/Sasmith05](https://github.com/Sasmith05)
