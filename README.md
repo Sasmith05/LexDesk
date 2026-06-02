@@ -2,7 +2,7 @@
 
 LexDesk is a full-stack legal practice management platform designed for advocates and legal offices to manage clients, court cases, legal workflows, billing ledgers, and office operations digitally.
 
-Built using modern full-stack technologies like Next.js, Prisma, PostgreSQL, and Tailwind CSS, the application follows a scalable SaaS-style architecture suitable for real-world legal management systems.
+Built using modern full-stack technologies like Next.js, Prisma, PostgreSQL, and Tailwind CSS, the application follows a scalable SaaS-style architecture suitable for real-world legal management system.
 
 ---
 
