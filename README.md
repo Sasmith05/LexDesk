@@ -145,20 +145,6 @@ The project is configured for deployment using:
 
 ---
 
-# 📸 Screenshots
-
-*(To add screenshots, capture your application screen and place the files inside the `/public` folder, then reference them here)*
-
-### Login Page
-![Login View](/public/login_page_preview.png)
-
-### Dashboard
-![Dashboard View](/public/dashboard_preview.png)
-
-### Invoicing & Billing
-![Invoices View](/public/invoices_preview.png)
-
----
 
 # 🎯 Project Goal
 
