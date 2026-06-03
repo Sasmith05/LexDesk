@@ -6,6 +6,19 @@ Built using modern full-stack technologies like Next.js, Prisma, PostgreSQL, and
 
 ---
 
+# 🔑 Demo Credentials
+
+Use the following demo accounts to explore the system:
+
+| Role         | Email                  | Password      |
+| ------------ | ---------------------- | ------------- |
+| **Admin**    | `admin@lexdesk.com`    | `admin123`    |
+| **Advocate** | `advocate@lexdesk.com` | `advocate123` |
+| **Staff**    | `staff@lexdesk.com`    | `staff123`    |
+
+---
+
+
 # 🚀 Features
 
 ## Authentication & Access Control
