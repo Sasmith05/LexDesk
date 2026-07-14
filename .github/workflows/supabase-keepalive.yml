@@ -54,18 +54,7 @@ jobs:
 
           echo "Secrets are configured."
 
-      # -- Step 2: Debug - print masked URL being hit ------------------------
-      - name: Debug connection info
-        run: |
-          # Print the URL (without exposing the key) to verify it's correct
-          FULL_URL="${{ secrets.SUPABASE_URL }}/rest/v1/health_check?select=id&limit=1"
-          echo "Target URL  : $FULL_URL"
-          echo "Anon Key    : ${SUPABASE_ANON_KEY:0:20}..." 
-          echo "Key length  : ${#SUPABASE_ANON_KEY} characters"
-        env:
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
-      # -- Step 3: Ping the Supabase REST API --------------------------------
+      # -- Step 2: Ping the Supabase REST API --------------------------------
       # Queries the health_check table (lightweight, RLS-gated public read).
       - name: Ping Supabase health_check table
         id: ping
