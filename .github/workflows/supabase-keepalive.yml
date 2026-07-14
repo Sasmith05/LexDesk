@@ -1,0 +1,97 @@
+# =============================================================================
+# Supabase Keep-Alive Workflow
+# =============================================================================
+# Purpose:
+#   Prevents the Supabase free-tier project from being paused due to inactivity
+#   by pinging the REST API every 6 hours, generating real database activity.
+#
+# GitHub Secrets Required (Settings → Secrets and Variables → Actions):
+#
+#   SUPABASE_URL      — Your project URL, e.g. https://xyzxyz.supabase.co
+#                       Found at: Supabase Dashboard → Project Settings → API
+#
+#   SUPABASE_ANON_KEY — Your project's public anon key (safe to use; RLS
+#                       protects your data). Do NOT use the service_role key.
+#                       Found at: Supabase Dashboard → Project Settings → API
+#
+# Table Required:
+#   Run the SQL in supabase/migrations/health_check.sql in your Supabase
+#   SQL Editor (Dashboard → SQL Editor) to create the health_check table
+#   with RLS enabled before this workflow runs.
+# =============================================================================
+
+name: Supabase Keep-Alive
+
+on:
+  # -- Runs automatically every 6 hours --------------------------------------
+  schedule:
+    - cron: "0 */6 * * *"   # At minute 0 past every 6th hour (UTC)
+
+  # -- Also supports manual trigger from GitHub Actions tab ------------------
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Supabase REST API
+    runs-on: ubuntu-latest
+    timeout-minutes: 5          # Fail fast; a ping should never take this long
+
+    steps:
+      # -- Step 1: Validate that secrets are configured ----------------------
+      - name: Validate secrets are set
+        run: |
+          if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
+            echo "ERROR: SUPABASE_URL secret is not set."
+            echo "Go to: GitHub repo -> Settings -> Secrets and Variables -> Actions -> New repository secret"
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.SUPABASE_ANON_KEY }}" ]; then
+            echo "ERROR: SUPABASE_ANON_KEY secret is not set."
+            echo "Go to: GitHub repo -> Settings -> Secrets and Variables -> Actions -> New repository secret"
+            exit 1
+          fi
+
+          echo "Secrets are configured."
+
+      # -- Step 2: Ping the Supabase REST API --------------------------------
+      # Queries the health_check table (lightweight, RLS-gated public read).
+      # -f makes curl exit with a non-zero code on HTTP 4xx/5xx errors.
+      # -s suppresses progress meter; -S still shows errors on failure.
+      - name: Ping Supabase health_check table
+        id: ping
+        run: |
+          echo "Pinging Supabase at $(date -u '+%Y-%m-%d %H:%M:%S UTC') ..."
+
+          RESPONSE=$(curl \
+            --fail \
+            --silent \
+            --show-error \
+            --max-time 30 \
+            --write-out "\nHTTP_STATUS:%{http_code}" \
+            --header "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            --header "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            --header "Accept: application/json" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/health_check?select=id&limit=1"
+          )
+
+          # Extract HTTP status code from the response
+          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
+          BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:")
+
+          echo "HTTP Status : $HTTP_STATUS"
+          echo "Response    : $BODY"
+
+          # Fail the workflow if we did not get a 2xx status
+          if [[ "$HTTP_STATUS" -lt 200 || "$HTTP_STATUS" -ge 300 ]]; then
+            echo ""
+            echo "Keep-alive ping FAILED (HTTP $HTTP_STATUS)."
+            echo "  Possible causes:"
+            echo "  - Supabase project is paused -- resume it at https://supabase.com/dashboard"
+            echo "  - SUPABASE_URL or SUPABASE_ANON_KEY secret is incorrect"
+            echo "  - health_check table does not exist -- run supabase/migrations/health_check.sql"
+            exit 1
+          fi
+
+          echo ""
+          echo "Keep-alive ping succeeded (HTTP $HTTP_STATUS). Supabase project is active."
