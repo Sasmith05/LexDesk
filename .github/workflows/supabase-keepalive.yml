@@ -54,30 +54,37 @@ jobs:
 
           echo "Secrets are configured."
 
-      # -- Step 2: Ping the Supabase REST API --------------------------------
+      # -- Step 2: Debug - print masked URL being hit ------------------------
+      - name: Debug connection info
+        run: |
+          # Print the URL (without exposing the key) to verify it's correct
+          FULL_URL="${{ secrets.SUPABASE_URL }}/rest/v1/health_check?select=id&limit=1"
+          echo "Target URL  : $FULL_URL"
+          echo "Anon Key    : ${SUPABASE_ANON_KEY:0:20}..." 
+          echo "Key length  : ${#SUPABASE_ANON_KEY} characters"
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      # -- Step 3: Ping the Supabase REST API --------------------------------
       # Queries the health_check table (lightweight, RLS-gated public read).
-      # -f makes curl exit with a non-zero code on HTTP 4xx/5xx errors.
-      # -s suppresses progress meter; -S still shows errors on failure.
       - name: Ping Supabase health_check table
         id: ping
         run: |
           echo "Pinging Supabase at $(date -u '+%Y-%m-%d %H:%M:%S UTC') ..."
 
-          RESPONSE=$(curl \
-            --fail \
+          # Run curl WITHOUT --fail so we always get the response body
+          HTTP_STATUS=$(curl \
             --silent \
-            --show-error \
             --max-time 30 \
-            --write-out "\nHTTP_STATUS:%{http_code}" \
+            --output /tmp/supabase_response.json \
+            --write-out "%{http_code}" \
             --header "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             --header "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             --header "Accept: application/json" \
             "${{ secrets.SUPABASE_URL }}/rest/v1/health_check?select=id&limit=1"
           )
 
-          # Extract HTTP status code from the response
-          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
-          BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:")
+          BODY=$(cat /tmp/supabase_response.json)
 
           echo "HTTP Status : $HTTP_STATUS"
           echo "Response    : $BODY"
@@ -86,10 +93,7 @@ jobs:
           if [[ "$HTTP_STATUS" -lt 200 || "$HTTP_STATUS" -ge 300 ]]; then
             echo ""
             echo "Keep-alive ping FAILED (HTTP $HTTP_STATUS)."
-            echo "  Possible causes:"
-            echo "  - Supabase project is paused -- resume it at https://supabase.com/dashboard"
-            echo "  - SUPABASE_URL or SUPABASE_ANON_KEY secret is incorrect"
-            echo "  - health_check table does not exist -- run supabase/migrations/health_check.sql"
+            echo "  Response body above shows the exact Supabase error."
             exit 1
           fi
 
